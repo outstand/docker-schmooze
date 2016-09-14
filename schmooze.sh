@@ -25,9 +25,9 @@ allow_bridge() {
   bridge_name=$1
   echo "Allowing communication to/from ${bridge_name}"
 
-  iptables -C FORWARD -i ${bridge_name} -j ACCEPT 2> /dev/null || \
+  iptables -D FORWARD -i ${bridge_name} -j ACCEPT && \
   iptables -I FORWARD -i ${bridge_name} -j ACCEPT
-  iptables -C FORWARD -o ${bridge_name} -j ACCEPT 2> /dev/null || \
+  iptables -D FORWARD -o ${bridge_name} -j ACCEPT && \
   iptables -I FORWARD -o ${bridge_name} -j ACCEPT
 
   echo 'Done.'
