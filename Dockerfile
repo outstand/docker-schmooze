@@ -1,8 +1,26 @@
-FROM jess/httpie
+FROM outstand/ruby-base:2.4.0-alpine
 MAINTAINER Ryan Schlesinger <ryan@outstand.com>
 
-RUN apk add --no-cache socat iptables
+RUN addgroup -S schmooze && \
+    adduser -S -G schmooze schmooze && \
+    addgroup -g 1101 docker && \
+    addgroup schmooze docker
 
-COPY schmooze.sh /bin/schmooze.sh
+RUN apk --no-cache add build-base
 
-ENTRYPOINT ["schmooze.sh"]
+WORKDIR /srv
+COPY Gemfile Gemfile.lock /srv/
+COPY lib/schmooze/version.rb /srv/lib/schmooze/
+COPY docker/fetch-cache.sh /srv/docker/
+
+ARG cache_host
+RUN docker/fetch-cache.sh ${cache_host} && \
+  bundle install
+COPY . /srv/
+RUN chown -R schmooze:schmooze /srv
+RUN ln -s /srv/exe/schmooze /usr/local/bin/schmooze
+
+COPY docker/irbrc /home/schmooze/.irbrc
+COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["help"]
