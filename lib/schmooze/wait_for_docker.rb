@@ -1,4 +1,5 @@
 require 'metaractor'
+require 'docker-api'
 
 module Schmooze
   class WaitForDocker
@@ -9,7 +10,15 @@ module Schmooze
     def call
       Logger.tagged('WaitForDocker') do
         Logger.info '==> Waiting for Docker...'
-        sleep 5
+        begin
+          Docker.ping
+        rescue => e
+          Logger.warn "Warning: #{e.message}; retrying"
+          sleep 1
+          retry
+        end
+
+        Logger.info '==> Docker is up!'
         handler.call
       end
     end
