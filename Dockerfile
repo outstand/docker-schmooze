@@ -15,7 +15,7 @@ COPY docker/fetch-cache.sh /srv/docker/
 
 ARG cache_host
 RUN docker/fetch-cache.sh ${cache_host} && \
-  bundle install
+  gosu schmooze bundle install
 COPY . /srv/
 RUN chown -R schmooze:schmooze /srv
 RUN ln -s /srv/exe/schmooze /usr/local/bin/schmooze
