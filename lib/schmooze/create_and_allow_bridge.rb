@@ -8,6 +8,7 @@ module Schmooze
     include Interactor::Organizer
 
     required :bridge_name
+    required :subnet, :ip_range
 
     organize [
       CreateBridge,

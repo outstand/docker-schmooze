@@ -10,6 +10,7 @@ module Schmooze
     include Metaractor
 
     required :bridge_name
+    required :subnet, :ip_range
     optional :verbose
 
     before do
@@ -33,7 +34,9 @@ module Schmooze
       begin
         create_and_allow_actor = CreateAndAllowBridgeActor.spawn(
           :create_and_allow,
-          bridge_name: bridge_name
+          bridge_name: bridge_name,
+          subnet: subnet,
+          ip_range: ip_range
         )
 
         monitor_docker_events_actor = MonitorDockerEventsActor.spawn(
@@ -73,6 +76,14 @@ module Schmooze
 
     def bridge_name
       context.bridge_name
+    end
+
+    def subnet
+      context.subnet
+    end
+
+    def ip_range
+      context.ip_range
     end
 
     def verbose
