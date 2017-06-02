@@ -1,4 +1,4 @@
-FROM outstand/ruby-base:2.4.0-alpine
+FROM outstand/ruby-base:2.4.1-alpine
 MAINTAINER Ryan Schlesinger <ryan@outstand.com>
 
 RUN addgroup -S schmooze && \
