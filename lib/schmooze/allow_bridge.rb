@@ -21,15 +21,6 @@ module Schmooze
       end
       cmd.run("iptables -I FORWARD -o #{bridge_name} -j ACCEPT")
 
-      # TODO from script:
-      # iptables -C FORWARD -i ${bridge_name} -j ACCEPT 2> /dev/null && \
-      # iptables -D FORWARD -i ${bridge_name} -j ACCEPT
-      # iptables -I FORWARD -i ${bridge_name} -j ACCEPT
-      #
-      # iptables -C FORWARD -o ${bridge_name} -j ACCEPT 2> /dev/null && \
-      # iptables -D FORWARD -o ${bridge_name} -j ACCEPT
-      # iptables -I FORWARD -o ${bridge_name} -j ACCEPT
-
       Logger.info "==> Done"
     end
 
