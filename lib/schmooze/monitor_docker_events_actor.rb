@@ -22,6 +22,10 @@ module Schmooze
               Logger.warn e.backtrace.join("\n")
               Concurrent::ScheduledTask.execute(30){ tell :monitor }
             end
+          rescue => e
+            Logger.warn "Warning: #{e.message}; retrying in 30 seconds"
+            Logger.warn e.backtrace.join("\n")
+            Concurrent::ScheduledTask.execute(30){ tell :monitor }
           end
         end
 

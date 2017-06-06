@@ -13,7 +13,19 @@ module Schmooze
         begin
           filters = {type: [:network], event: [:create]}.to_json
           Docker::Event.stream(filters: filters) do |event|
-            handler.call(event)
+            begin
+              if event.actor.attributes['name'] == 'dns' &&
+                  event.actor.attributes['type'] == 'bridge'
+                Logger.info 'Ignoring dns bridge creation'
+              else
+                Logger.info event.to_s
+                handler.call(event)
+              end
+            rescue => e
+              Logger.warn "Warning: #{e.message}"
+              Logger.warn e.backtrace.join("\n")
+              raise
+            end
           end
         rescue Docker::Error::TimeoutError
           retry
