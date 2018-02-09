@@ -11,7 +11,7 @@ module Schmooze
       Logger.tagged('MonitorDockerEvents') do
         Logger.info "==> Monitoring docker events..."
         begin
-          filters = {type: [:network], event: [:create]}.to_json
+          filters = MultiJson.dump({type: [:network], event: [:create]})
           Docker::Event.stream(filters: filters) do |event|
             begin
               if event.actor.attributes['name'] == 'dns' &&
