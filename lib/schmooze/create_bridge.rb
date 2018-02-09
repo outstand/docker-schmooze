@@ -32,8 +32,15 @@ module Schmooze
         rescue Docker::Error::ServerError => e
           # Whitelist this error message
           raise if e.message != "network with name #{bridge_name} already exists\n"
+        rescue Excon::Error::Forbidden => e
+          raise if e.response.body != "network with name #{bridge_name} already exists\n"
         rescue Docker::Error::TimeoutError
           retry
+        rescue Excon::Error::HTTPStatus => e
+          message = StringIO.new
+          Excon::PrettyPrinter.pp(message, e.response.data)
+          Logger.warn "Response: #{message.string}"
+          raise
         rescue Excon::Errors::SocketError => e
           if Errno::ENOENT === e.cause
             raise
