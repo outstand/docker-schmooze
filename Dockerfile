@@ -1,4 +1,4 @@
-FROM outstand/ruby-base:2.4.1-alpine
+FROM outstand/ruby-base:2.5.0-alpine
 MAINTAINER Ryan Schlesinger <ryan@outstand.com>
 
 RUN apk --no-cache add build-base iptables
